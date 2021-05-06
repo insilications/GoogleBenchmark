@@ -4,10 +4,10 @@
 #
 %define keepstatic 1
 Name     : GoogleBenchmark
-Version  : 1.5.2
+Version  : 1.5.3
 Release  : 1
-URL      : file:///aot/build/clearlinux/packages/GoogleBenchmark/GoogleBenchmark-1.5.2.tar.gz
-Source0  : file:///aot/build/clearlinux/packages/GoogleBenchmark/GoogleBenchmark-1.5.2.tar.gz
+URL      : file:///aot/build/clearlinux/packages/GoogleBenchmark/GoogleBenchmark-1.5.3.tar.gz
+Source0  : file:///aot/build/clearlinux/packages/GoogleBenchmark/GoogleBenchmark-1.5.3.tar.gz
 Summary  : Google microbenchmark framework
 Group    : Development/Tools
 License  : Apache-2.0 GPL-2.0
@@ -20,15 +20,23 @@ BuildRequires : buildreq-cmake
 BuildRequires : buildreq-distutils3
 BuildRequires : findutils
 BuildRequires : freetype-dev
-BuildRequires : freetype-staticdev
+BuildRequires : gcc
+BuildRequires : gcc-dev
+BuildRequires : gcc-libs-math
+BuildRequires : gcc-libstdc++32
+BuildRequires : gcc-libubsan
+BuildRequires : gcc-locale
 BuildRequires : git
 BuildRequires : glibc-dev
+BuildRequires : glibc-staticdev
 BuildRequires : googletest
 BuildRequires : googletest-dev
+BuildRequires : libgcc1
+BuildRequires : libstdc++
 BuildRequires : numpy
 BuildRequires : scipy
+BuildRequires : tiff
 BuildRequires : tiff-dev
-BuildRequires : tiff-staticdev
 BuildRequires : zlib-dev
 BuildRequires : zlib-staticdev
 # Suppress stripping binaries
@@ -38,6 +46,7 @@ BuildRequires : zlib-staticdev
 %description
 # Benchmark
 [![build-and-test](https://github.com/google/benchmark/workflows/build-and-test/badge.svg)](https://github.com/google/benchmark/actions?query=workflow%3Abuild-and-test)
+[![bazel](https://github.com/google/benchmark/actions/workflows/bazel.yml/badge.svg)](https://github.com/google/benchmark/actions/workflows/bazel.yml)
 [![pylint](https://github.com/google/benchmark/workflows/pylint/badge.svg)](https://github.com/google/benchmark/actions?query=workflow%3Apylint)
 [![test-bindings](https://github.com/google/benchmark/workflows/test-bindings/badge.svg)](https://github.com/google/benchmark/actions?query=workflow%3Atest-bindings)
 
@@ -70,7 +79,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1617786441
+export SOURCE_DATE_EPOCH=1620289093
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -100,7 +109,7 @@ make  %{?_smp_mflags}
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1617786441
+export SOURCE_DATE_EPOCH=1620289093
 rm -rf %{buildroot}
 pushd clr-build
 %make_install
@@ -123,6 +132,6 @@ popd
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/libbenchmark.so.1
-/usr/lib64/libbenchmark.so.1.5.2
+/usr/lib64/libbenchmark.so.1.5.3
 /usr/lib64/libbenchmark_main.so.1
-/usr/lib64/libbenchmark_main.so.1.5.2
+/usr/lib64/libbenchmark_main.so.1.5.3
