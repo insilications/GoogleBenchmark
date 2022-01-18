@@ -5,15 +5,14 @@
 %define keepstatic 1
 Name     : GoogleBenchmark
 Version  : 1.6.1
-Release  : 2
+Release  : 202
 URL      : file:///aot/build/clearlinux/packages/GoogleBenchmark/GoogleBenchmark-v1.6.1.tar.gz
 Source0  : file:///aot/build/clearlinux/packages/GoogleBenchmark/GoogleBenchmark-v1.6.1.tar.gz
 Summary  : Google microbenchmark framework
 Group    : Development/Tools
 License  : Apache-2.0 GPL-2.0
+Requires: GoogleBenchmark-lib = %{version}-%{release}
 BuildRequires : buildreq-cmake
-BuildRequires : buildreq-distutils3
-BuildRequires : doxygen
 BuildRequires : findutils
 BuildRequires : freetype-dev
 BuildRequires : gcc
@@ -22,17 +21,12 @@ BuildRequires : gcc-libs-math
 BuildRequires : gcc-libstdc++32
 BuildRequires : gcc-libubsan
 BuildRequires : gcc-locale
-BuildRequires : git
 BuildRequires : glibc-dev
 BuildRequires : glibc-staticdev
 BuildRequires : googletest
 BuildRequires : googletest-dev
 BuildRequires : libgcc1
 BuildRequires : libstdc++
-BuildRequires : pypi(absl_py)
-BuildRequires : pypi(numpy)
-BuildRequires : pypi(pandas)
-BuildRequires : pypi(scipy)
 BuildRequires : tiff
 BuildRequires : tiff-dev
 BuildRequires : zlib-dev
@@ -48,6 +42,33 @@ BuildRequires : zlib-staticdev
 [![pylint](https://github.com/google/benchmark/workflows/pylint/badge.svg)](https://github.com/google/benchmark/actions?query=workflow%3Apylint)
 [![test-bindings](https://github.com/google/benchmark/workflows/test-bindings/badge.svg)](https://github.com/google/benchmark/actions?query=workflow%3Atest-bindings)
 
+%package dev
+Summary: dev components for the GoogleBenchmark package.
+Group: Development
+Requires: GoogleBenchmark-lib = %{version}-%{release}
+Provides: GoogleBenchmark-devel = %{version}-%{release}
+Requires: GoogleBenchmark = %{version}-%{release}
+
+%description dev
+dev components for the GoogleBenchmark package.
+
+
+%package doc
+Summary: doc components for the GoogleBenchmark package.
+Group: Documentation
+
+%description doc
+doc components for the GoogleBenchmark package.
+
+
+%package lib
+Summary: lib components for the GoogleBenchmark package.
+Group: Libraries
+
+%description lib
+lib components for the GoogleBenchmark package.
+
+
 %prep
 %setup -q -n GoogleBenchmark
 cd %{_builddir}/GoogleBenchmark
@@ -58,7 +79,7 @@ unset https_proxy
 unset no_proxy
 export SSL_CERT_FILE=/var/cache/ca-certs/anchors/ca-certificates.crt
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1642531471
+export SOURCE_DATE_EPOCH=1642531636
 mkdir -p clr-build
 pushd clr-build
 export GCC_IGNORE_WERROR=1
@@ -130,12 +151,13 @@ export DESKTOP_SESSION=plasma
 -DBENCHMARK_ENABLE_EXCEPTIONS:BOOL=ON \
 -DBENCHMARK_ENABLE_LTO:BOOL=ON \
 -DBENCHMARK_ENABLE_WERROR:BOOL=OFF \
--DBENCHMARK_ENABLE_INSTALL:BOOL=ON
+-DBENCHMARK_ENABLE_INSTALL:BOOL=ON \
+-DBENCHMARK_USE_BUNDLED_GTEST:BOOL=OFF
 make  %{?_smp_mflags}    V=1 VERBOSE=1
 popd
 
 %install
-export SOURCE_DATE_EPOCH=1642531472
+export SOURCE_DATE_EPOCH=1642531636
 rm -rf %{buildroot}
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
@@ -208,3 +230,34 @@ popd
 
 %files
 %defattr(-,root,root,-)
+
+%files dev
+%defattr(-,root,root,-)
+/usr/include/benchmark/benchmark.h
+/usr/lib64/cmake/benchmark/benchmarkConfig.cmake
+/usr/lib64/cmake/benchmark/benchmarkConfigVersion.cmake
+/usr/lib64/cmake/benchmark/benchmarkTargets-none.cmake
+/usr/lib64/cmake/benchmark/benchmarkTargets.cmake
+/usr/lib64/libbenchmark.so
+/usr/lib64/libbenchmark_main.so
+/usr/lib64/pkgconfig/benchmark.pc
+
+%files doc
+%defattr(0644,root,root,0755)
+/usr/share/doc/benchmark/AssemblyTests.md
+/usr/share/doc/benchmark/_config.yml
+/usr/share/doc/benchmark/dependencies.md
+/usr/share/doc/benchmark/index.md
+/usr/share/doc/benchmark/perf_counters.md
+/usr/share/doc/benchmark/platform_specific_build_instructions.md
+/usr/share/doc/benchmark/random_interleaving.md
+/usr/share/doc/benchmark/releasing.md
+/usr/share/doc/benchmark/tools.md
+/usr/share/doc/benchmark/user_guide.md
+
+%files lib
+%defattr(-,root,root,-)
+/usr/lib64/libbenchmark.so.1
+/usr/lib64/libbenchmark.so.1.6.1.5
+/usr/lib64/libbenchmark_main.so.1
+/usr/lib64/libbenchmark_main.so.1.6.1.5
